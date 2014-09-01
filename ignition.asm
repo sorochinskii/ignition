@@ -11,7 +11,6 @@ CONST_FF            equ     0xff
 CONST_160           equ     .160
 CONST_192           equ     .192        ;Сдвинутое на 4 разряда влево число 12.
 CONST_12            equ     .12
-NUMSPEEDAVER        equ     0x04        ;number of speed counter, that need to calculate average speed
 TOOTH_ANGLE         equ     .12         ;Количество градусов между зубами x2.
 TOOTH_NUMBER        equ     .58         ;Количество зубов.
 ANGLE_MAX_H         equ     0x02        ;Максимальный угол х2. Старший байт.
@@ -56,7 +55,7 @@ STATUS_TOOTH_MISS   equ     .4          ;Флаг состояния - перв�
         ignition12H     equ	0xF
 
 ;*Предопределенные углы зажигания.
-;TODO Должны задаваться и корректироваться с пульта.
+;TODO Должны задаваться и корректироваться с пульта. А пока заданы железно.
 ANGLE_IGN_1         equ     .20
 ANGLE_IGN_2         equ     .40
 ANGLE_IGN_3         equ     .60
@@ -493,7 +492,7 @@ intHandler:
         movwf   tmr0tickCounterLt
         movfw   tmr0tickCounterH
         movwf   tmr0tickCounterHt
-        movlw   CONST_ZERO                ;Обнуляем счетчик дискрет.
+        movlw   CONST_ZERO                  ;Обнуляем счетчик тиков.
         movwf   tmr0tickCounterL
         movwf   tmr0tickCounterH
         movfw   anglePerTick
@@ -513,7 +512,7 @@ intHandler:
         bcf     statusByte, STATUS_STOP     ;Сброс флага останова.
         bsf     statusByte, STATUS_IGN_EN   ;Установка флага разрешения зажигания.
         ;*Поиск беззубья.
-        ;Копирование оперируемыч предыдущич значений во временные переменные.
+        ;Копирование оперируемых предыдущих значений во временные переменные.
     toothMissSearch:
         movfw   tmr0tickCounterPrevL
         movwf   tmr0tickCounterPrevTmpL
